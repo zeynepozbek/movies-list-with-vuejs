@@ -4,7 +4,7 @@
     <HelloWorld msg="Welcome to Your Vue.js App"/>
     <search v-on:SearchRequested = "handleSearch"></search>
     <p v-if="isLoading">Loading...</p>
-    <preview :gifs=gifs></preview>
+    <preview :movies=movies></preview>
   </div>
 </template>
 
@@ -25,7 +25,7 @@ export default {
   data() {
     return {
         isLoading: true,
-        gifs: []
+        movies: []
     }
   },
   methods: {
@@ -33,13 +33,13 @@ export default {
        fetch(url)
            .then((res) => { return res.json() })
            .then((res) => {
-               this.gifs = res.results;
-               console.log(res.results);
+               this.movies = res.results;
+               //console.log(res.results);
                this.isLoading = false;
            })
    },
     handleSearch(query) {
-        this.gifs = [];
+        this.movies = [];
         this.isLoading = true;
 
         const url = `http://api.themoviedb.org/3/search/movie?api_key=4a455b69e26588bc7ba46001fdf4a5bb&query=${query}`;
