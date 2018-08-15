@@ -1,17 +1,54 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
+  <div id="app" class="container mx-auto pt-4">
+    <!--<img alt="Vue logo" src="./assets/logo.png">-->
     <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <search v-on:SearchRequested = "handleSearch"></search>
+    <p v-if="isLoading">Loading...</p>
+    <preview :gifs=gifs></preview>
   </div>
 </template>
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
+import Search from './components/Search.vue'
+import Preview from './components/Preview.vue'
+
 
 export default {
   name: 'app',
+
   components: {
-    HelloWorld
+    HelloWorld,
+    Search,
+    Preview
+  },
+  data() {
+    return {
+        isLoading: true,
+        gifs: []
+    }
+  },
+  methods: {
+   doQuery(url){
+       fetch(url)
+           .then((res) => { return res.json() })
+           .then((res) => {
+               this.gifs = res.results;
+               console.log(res.results);
+               this.isLoading = false;
+           })
+   },
+    handleSearch(query) {
+        this.gifs = [];
+        this.isLoading = true;
+
+        const url = `http://api.themoviedb.org/3/search/movie?api_key=4a455b69e26588bc7ba46001fdf4a5bb&query=${query}`;
+        this.doQuery(url);
+    }
+  },
+  created() {
+      const url = 'https://api.themoviedb.org/3/discover/movie?language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&api_key=4a455b69e26588bc7ba46001fdf4a5bb'
+      this.doQuery(url);
   }
 }
 </script>
